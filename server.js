@@ -49,6 +49,8 @@ app.put('/api/notes/:id', (req, res, next) => {
   notes.update(id, updateObj, (err, item) => {
     if (err) {
       return next(err);
+    } if (item) {
+      res.json(item);
     } else {
       next();
     }
