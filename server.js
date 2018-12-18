@@ -2,31 +2,58 @@
 
 const express = require('express');
 const data = require ('./db/notes');
-const simDB = require ('.db/simDB');
-const notes = simDB.initilize(data);
-const { PORT } = require('./config');
+const simDB = require ('./db/simDB');
+const notes = simDB.initialize(data);
 
+const { PORT } = require('./config');
 const { requestLogger } = require('./middleware/logger');
 
 const app = express();
 
-
-
-app.get('/api/notes', (req, res, ) => {
-  if (req.query.searchTerm) {
-    const searchTerm = req.query.searchTerm;
-    const resData = data.filter(item => item.title.includes(`${searchTerm}`) || item.content.includes(`${searchTerm}`));
-    res.json(resData);
-  } else {
-    res.json(data);
-  }
-});
-
-app.get('/api/notes/:id', (req, res) => {
-  res.json(data.find(item => item.id === Number(req.params.id)));
-});
-
 app.use(requestLogger);
+app.use(express.static('public'));
+app.use (express.json());
+
+app.get('/api/notes', (req, res, next) => {
+  const searchTerm = req.query.searchTerm;
+  notes.filter(searchTerm, (err, list) => {
+    if (err) {
+      return next(err);
+    }
+    res.json(list);
+  });
+});
+
+app.get('/api/notes/:id', (req, res, next) => {
+  const id = req.params.id;
+  notes.find(id, (err, item) => {
+    if (err) {
+      return next(err);
+    }
+    res.json(item);
+  });
+});
+
+app.put('/api/notes/:id', (req, res, next) => {
+  const id = req.params.id;
+
+  const updateObj = {};
+  const updateFields = ['title', 'content'];
+
+  updateFields.forEach(field => {
+    if (field in req.body) {
+      updateObj[field] = req.body[field];
+    }
+  });
+
+  notes.update(id, updateObj, (err, item) => {
+    if (err) {
+      return next(err);
+    } else {
+      next();
+    }
+  });
+});
 
 app.use(function (req, res, next) {
   var err = new Error('Not Found');
@@ -42,8 +69,6 @@ app.use(function (err, req, res, next) {
     error: err
   });
 });
-
-
 
 app.listen(PORT, function () {
   console.info(`Server listening on ${this.address().port}`);
