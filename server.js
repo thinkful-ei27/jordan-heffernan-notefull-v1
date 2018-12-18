@@ -2,7 +2,10 @@
 
 const express = require('express');
 const data = require ('./db/notes');
+const simDB = require ('.db/simDB');
+const notes = simDB.initilize(data);
 const { PORT } = require('./config');
+
 const { requestLogger } = require('./middleware/logger');
 
 const app = express();
