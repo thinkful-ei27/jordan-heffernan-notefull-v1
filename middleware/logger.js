@@ -1,12 +1,14 @@
 'use strict';
 
-// const morgan = require('morgan');
-// app.use(morgan('common'));
+const morgan = require('morgan');
+morgan('dev');
 
-function requestLogger(req, res, next) {
-  const now = new Date();
-  console.log(`${now.toLocaleDateString()} ${now.toLocaleTimeString()} ${req.method} ${req.url}`);
-  next();
-}
+module.exports = {morgan};
 
-module.exports = { requestLogger };
+// function requestLogger(req, res, next) {
+//   const now = new Date();
+//   console.log(`${now.toLocaleDateString()} ${now.toLocaleTimeString()} ${req.method} ${req.url}`);
+//   next();
+// }
+
+// module.exports = { requestLogger };

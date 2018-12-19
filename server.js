@@ -6,11 +6,11 @@ const simDB = require ('./db/simDB');
 const notes = simDB.initialize(data);
 
 const { PORT } = require('./config');
-const { requestLogger } = require('./middleware/logger');
+const { morgan } = require('./middleware/logger');
 
 const app = express();
 
-app.use(requestLogger);
+app.use(morgan('dev'));
 app.use(express.static('public'));
 app.use (express.json());
 
