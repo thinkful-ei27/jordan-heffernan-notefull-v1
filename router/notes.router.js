@@ -22,7 +22,11 @@ router.get('/notes/:id', (req, res, next) => {
     if (err) {
       return next(err);
     }
-    res.json(item);
+    if (item) {
+      res.json(item); 
+    } else {
+      next();
+    }
   });
 });
 
@@ -68,6 +72,16 @@ router.put('/notes/:id', (req, res, next) => {
     } else {
       next();
     }
+  });
+});
+
+router.delete('/notes/:id', (req, res, next) => {
+  const id = req.params.id;
+  notes.delete(id, (err) => {
+    if (err) {
+      return next(err);
+    } 
+    res.sendStatus(204);
   });
 });
 
