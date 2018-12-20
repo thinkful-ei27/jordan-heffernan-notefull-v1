@@ -17,6 +17,7 @@ const noteful = (function () {
    * GENERATE HTML FUNCTIONS
    */
   function generateNotesList(list, currentNote) {
+    console.log(list);
     const listItems = list.map(item => `
     <li data-id="${item.id}" class="js-note-element ${currentNote.id === item.id ? 'active' : ''}">
       <a href="#" class="name js-note-show-link">${item.title}</a>
@@ -66,6 +67,7 @@ const noteful = (function () {
   }
 
   function handleNoteFormSubmit() {
+    console.log('hi')
     $('.js-note-edit-form').on('submit', function (event) {
       event.preventDefault();
 
@@ -94,6 +96,7 @@ const noteful = (function () {
           store.currentNote = createResponse;
 
           api.search(store.currentSearchTerm, searchResponse => {
+            console.log(searchResponse);
             store.notes = searchResponse;
             render();
           });
@@ -136,7 +139,6 @@ const noteful = (function () {
   function bindEventListeners() {
     handleNoteItemClick();
     handleNoteSearchSubmit();
-    handleNoteFormSubmit();
     handleNoteFormSubmit();
     handleNoteStartNewSubmit();
     handleNoteDeleteClick();
