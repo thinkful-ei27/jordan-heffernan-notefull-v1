@@ -107,10 +107,18 @@ router.put('/notes/:id', (req, res, next) => {
   const updateObj = {};
   const updateFields = ['title', 'content'];
 
+  if (!req.body.title) {
+    const err = new Error('Missing \'title\' in request body');
+    err.status = 400;
+    return next(err);
+  }
+
   updateFields.forEach(field => {
     if (field in req.body) {
       updateObj[field] = req.body[field];
     }
+    
+
   });
 
   notes.update(id, updateObj)
